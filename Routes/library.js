@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../models/index');
+const BooksModel = db.books;
 
 router
     .route('/books')
@@ -7,18 +9,17 @@ router
          GET '/books' -> fetch and returns all book records from the Database
     */
     .get((req , res) => {
-        res.status(200).send({id : 1 , book : 'Harry Potter P1'});
+        BooksModel.findAll({})
+        .then(data => res.status(200).send(data))
+        .catch((err) => res.send(400).send(err));
     })
     /*
          POST '/books/ -> Inserts the given new book data in the Database
     */
     .post((req , res) => {
-        const newBook = {
-            id: 2,
-            book : req.body.name
-        };
-
-        res.status(200).send(newBook);
+        BooksModel.create(req.body)
+        .then(() => res.status(201).send('Record Created'))
+        .catch((err) => res.status(400).send(err));
     });
 
 
@@ -28,18 +29,17 @@ router
          PUT '/books/id -> Updates the book record of the given id
     */
     .put((req , res) => {
-        const id = req.params.id;
-        const newData = req.body;
-
-        res.status(200).send(`Data updated for id : ${id}`);
+        BooksModel.update(req.body , {where : {id : req.params.id}})
+        .then(() => res.status(200).send('Record Updated'))
+        .catch(err => res.status(400).send(err));
     })
     /*
          DELETE '/books/id -> Deletes the book record for given id
     */
    .delete((req , res) => {
-        const id = req.params.id;
-
-        res.status(200).send(`Data deleted. id : ${id}`)
+        BooksModel.destroy({where : {id : req.params.id}})
+        .then(() => res.status(200).send('Record Deleted'))
+        .catch(err => res.status(400).send(err));
    })
 
 
