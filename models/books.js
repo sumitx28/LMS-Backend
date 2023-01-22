@@ -11,7 +11,8 @@ module.exports = (sequelize , DataTypes) => {
             required : true
         },
         author : DataTypes.STRING(100),
-        description : DataTypes.STRING(255)
+        description : DataTypes.STRING(255),
+        quantity : DataTypes.INTEGER
     })
 
     return Books;

@@ -3,11 +3,20 @@ const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models/index');
 
+app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	res.setHeader("Access-Control-Max-Age", "1800");
+	res.setHeader("Access-Control-Allow-Headers", "content-type");
+	res.setHeader("Access-Control-Allow-Methods","PUT, POST, GET, DELETE, PATCH, OPTIONS");
+    next();
+});
+
 db.sequelize.authenticate()
 .then(() => console.log('DB Connected'))
 .catch(() => console.log('Error connecting to DB'));
 
-db.sequelize.sync({logging : false})
+db.sequelize.sync({force : false})
 .then(() => console.log('synced'))
 .catch(() => console.log('Unable to sync'));
 
@@ -21,6 +30,7 @@ db.sequelize.sync({logging : false})
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
+app.use(express.static('test-app'));
 
 const libraryRoute = require('./Routes/library');
 app.use('/library' , libraryRoute);

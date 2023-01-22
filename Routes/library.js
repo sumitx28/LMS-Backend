@@ -18,7 +18,7 @@ router
     */
     .post((req , res) => {
         BooksModel.create(req.body)
-        .then(() => res.status(201).send('Record Created'))
+        .then(() => res.status(200).send(JSON.stringify('record created')))
         .catch((err) => res.status(400).send(err));
     });
 
@@ -26,11 +26,19 @@ router
 router
     .route('/books/:id')
     /*
+         GET '/books/id -> Find book for the given id
+    */
+    .get((req , res) => {
+        BooksModel.findOne({where : {id : req.params.id}})
+        .then(data => res.status(200).send(data))
+        .catch(err => res.status(400).send(err));
+    })
+    /*
          PUT '/books/id -> Updates the book record of the given id
     */
     .put((req , res) => {
         BooksModel.update(req.body , {where : {id : req.params.id}})
-        .then(() => res.status(200).send('Record Updated'))
+        .then(() => res.status(200).send(JSON.stringify('Record Updated')))
         .catch(err => res.status(400).send(err));
     })
     /*
@@ -38,7 +46,7 @@ router
     */
    .delete((req , res) => {
         BooksModel.destroy({where : {id : req.params.id}})
-        .then(() => res.status(200).send('Record Deleted'))
+        .then(() => res.status(200).send(JSON.stringify('Record Deleted')))
         .catch(err => res.status(400).send(err));
    })
 
