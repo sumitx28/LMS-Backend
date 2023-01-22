@@ -12,7 +12,11 @@ module.exports = (sequelize , DataTypes) => {
         },
         author : DataTypes.STRING(100),
         description : DataTypes.STRING(255),
-        quantity : DataTypes.INTEGER
+        issued : {
+            type : DataTypes.BOOLEAN(),
+            defaultValue : false
+        },
+        studentName : DataTypes.STRING(100)
     })
 
     return Books;

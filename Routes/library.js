@@ -22,6 +22,22 @@ router
         .catch((err) => res.status(400).send(err));
     });
 
+router
+    .route('/books/available-books')
+    .get((req , res) => {
+      BooksModel.findAll({where : {issued : false}})
+      .then(data => res.status(200).send(data))
+      .catch((err) => res.send(400).send(err));
+    })
+
+router
+    .route('/books/issued-books')
+    .get((req , res) => {
+     BooksModel.findAll({where : {issued : true}})
+      .then(data => res.status(200).send(data))
+      .catch((err) => res.send(400).send(err));
+    })
+
 
 router
     .route('/books/:id')
@@ -47,6 +63,22 @@ router
    .delete((req , res) => {
         BooksModel.destroy({where : {id : req.params.id}})
         .then(() => res.status(200).send(JSON.stringify('Record Deleted')))
+        .catch(err => res.status(400).send(err));
+   })
+
+router
+   .route('/books/issue/:id')
+   .post((req , res) => {
+        BooksModel.update({studentName : req.body.studentName , issued : true} , {where : {id : req.params.id}})
+        .then(() => res.status(200).send(JSON.stringify(`Book issued to ${req.body.studentName}`)))
+        .catch(err => res.status(400).send(err));
+   })
+
+router
+   .route('/books/return/:id')
+   .post((req , res) => {
+        BooksModel.update({studentName : '' , issued : false} , {where : {id : req.params.id}})
+        .then(() => res.status(200).send(JSON.stringify('Book Returned')))
         .catch(err => res.status(400).send(err));
    })
 
