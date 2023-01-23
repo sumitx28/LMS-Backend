@@ -24,6 +24,9 @@ router
 
 router
     .route('/books/available-books')
+    /*
+         GET '/books/available-books -> Returns an Array of Books which are avilable in the library
+    */
     .get((req , res) => {
       BooksModel.findAll({where : {issued : false}})
       .then(data => res.status(200).send(data))
@@ -32,6 +35,9 @@ router
 
 router
     .route('/books/issued-books')
+    /*
+         GET '/books/issued-books -> Returns an Array of books which are issued.
+    */
     .get((req , res) => {
      BooksModel.findAll({where : {issued : true}})
       .then(data => res.status(200).send(data))
@@ -68,6 +74,9 @@ router
 
 router
    .route('/books/issue/:id')
+   /*
+         POST '/books/issue/id -> Issues the book of Id along with Given Name
+    */
    .post((req , res) => {
         BooksModel.update({studentName : req.body.studentName , issued : true} , {where : {id : req.params.id}})
         .then(() => res.status(200).send(JSON.stringify(`Book issued to ${req.body.studentName}`)))
@@ -76,6 +85,9 @@ router
 
 router
    .route('/books/return/:id')
+   /*
+         POST '/books/return/id -> Updates book status to returned.
+    */
    .post((req , res) => {
         BooksModel.update({studentName : '' , issued : false} , {where : {id : req.params.id}})
         .then(() => res.status(200).send(JSON.stringify('Book Returned')))
