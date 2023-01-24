@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models/index');
+const sessions = require('express-session');
 
 /*
     API Routes
@@ -25,6 +26,14 @@ app.use(function(req, res, next) {
     next();
 });
 
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}));
+
 // Database Connection
 db.sequelize.authenticate()
 .then(() => console.log('DB Connected'))
@@ -43,6 +52,10 @@ app.use(express.static('lib-frontend'));
 app.get('/' , (req , res) => {
     res.sendFile('./index.html');
 })
+
+// Auth Route
+const authRoute = require('./Routes/auth');
+app.use('/auth' , authRoute);
 
 // Library Route
 const libraryRoute = require('./Routes/library');
