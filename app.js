@@ -3,6 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const db = require('./models/index');
 const sessions = require('express-session');
+const cors = require('cors');
+const ONE_DAY = 1000 * 60 * 60 * 24;
 
 /*
     API Routes
@@ -17,23 +19,6 @@ const sessions = require('express-session');
     9. POST '/books/return/id -> Updates book status to returned.
 */
 
-app.use(function(req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Credentials", "true");
-	res.setHeader("Access-Control-Max-Age", "1800");
-	res.setHeader("Access-Control-Allow-Headers", "content-type");
-	res.setHeader("Access-Control-Allow-Methods","PUT, POST, GET, DELETE, PATCH, OPTIONS");
-    next();
-});
-
-const oneDay = 1000 * 60 * 60 * 24;
-app.use(sessions({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized:true,
-    cookie: { maxAge: oneDay },
-    resave: false
-}));
-
 // Database Connection
 db.sequelize.authenticate()
 .then(() => console.log('DB Connected'))
@@ -44,10 +29,16 @@ db.sequelize.sync({force : false})
 .then(() => console.log('synced'))
 .catch(() => console.log('Unable to sync'));
 
-
+app.use(sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized:true,
+    cookie: { maxAge: ONE_DAY },
+    resave: false
+}));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-app.use(express.static('lib-frontend'));
+app.use(express.static('LMS-Frontend'));
 
 app.get('/' , (req , res) => {
     res.sendFile('./index.html');
