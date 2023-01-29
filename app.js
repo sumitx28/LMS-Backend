@@ -40,10 +40,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static('LMS-Frontend'));
 
-app.get('/' , (req , res) => {
-    res.sendFile('./index.html');
-})
-
 // Auth Route
 const authRoute = require('./Routes/auth');
 app.use('/auth' , authRoute);
