@@ -3,7 +3,7 @@
 This is the backend for a library management system built using NodeJs, Express, MySQL and Sequelize.
 
 ## DEMO
-![](https://github.com/sumitx28/LMS-Backend/blob/main/lib-mgmt-demo.gif)
+<img src="https://github.com/sumitx28/LMS-Backend/blob/main/lib-mgmt-demo.gif" width="400" height="200" />
 
 ## Features
 
